@@ -1,37 +1,52 @@
-const prompt = require("prompt-sync")();
-
 let humanScore = 0;
 let computerScore = 0;
 
 function getComputerChoice() {
 
-    number = Math.random()
+    const number = Math.random();
 
-    if (number > 0 && number < 0.33) {
+    if (number < 0.33) {
         return "rock";
-    } else if (number > 0.33 && number < 0.66) {
+    } else if (number < 0.66) {
         return "scissors";
     } else {
         return "paper";
     }
 }
 
-function getHumanChoice() {
-    return prompt("Rock, paper or scissors? ");
-}
-
-function PlayRound(humanChoice, computerChoice) {
-    if ((humanChoice == "rock" && computerChoice == "scissors") || (humanChoice == "paper" && computerChoice == "rock") || (humanChoice == "scissors" && computerChoice == "paper")) {
-        console.log("You win!");
+function playRound(humanChoice, computerChoice) {
+    if ((humanChoice == "rock" && computerChoice == "scissors") ||
+        (humanChoice == "paper" && computerChoice == "rock") || (humanChoice == "scissors" && computerChoice == "paper")) {
         humanScore++;
-    } else if ((humanChoice == "scissors" && computerChoice == "rock") || (humanChoice == "rock" && computerChoice == "paper") || (humanChoice == "paper" && computerChoice == "scissors")) {
-        console.log("You lost!");
+        return "You win!";
+    } else if ((humanChoice == "scissors" && computerChoice == "rock") ||
+               (humanChoice == "rock" && computerChoice == "paper") || (humanChoice == "paper" && computerChoice == "scissors")) {
         computerScore++;
+        return "You lost!";
     } else if (humanChoice == computerChoice) {
-        console.log("It's a tie!");
+        return "It's a tie";
     }
 }
 
+function updateDOM(humanChoice) {
+    const computerChoice = getComputerChoice();
+    const result = playRound(humanChoice, computerChoice);
+
+    // Update round result
+    document.getElementById("round-result").textContent = 
+        `You chose ${humanChoice}, Computer chose ${computerChoice}. ${result}`;
+
+    // Update scores
+    document.getElementById("scores").textContent = 
+        `Human: ${humanScore} | Computer: ${computerScore}`;
+}
+
+// Add event listeners to buttons
+document.getElementById("rock").addEventListener("click", () => updateDOM("rock"));
+document.getElementById("paper").addEventListener("click", () => updateDOM("paper"));
+document.getElementById("scissors").addEventListener("click", () => updateDOM("scissors"));
+
+/*
 function playGame(PlayRound) {
     for (let i = 0; i<5; i++) {
         const humanSelection = getHumanChoice();
@@ -45,3 +60,5 @@ function playGame(PlayRound) {
 } 
 
 playGame(PlayRound);
+
+*/
